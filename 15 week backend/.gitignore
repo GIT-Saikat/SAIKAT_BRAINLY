@@ -1,0 +1,10 @@
+# Exclude node_modules folder
+node_modules/
+
+# Exclude build and output folders
+dist/
+
+# Exclude environment files
+.env
+
+
