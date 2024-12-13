@@ -32,9 +32,6 @@ app.use(cors());
 
 app.post("/api/v1/signup",async (req:any, res:any)=>{
     //zod validation , hash the password , all try catch status code update from slides
-
-   
-
     const result=SchemaZod.safeParse(req.body);
 
     if (!result.success) {
@@ -225,8 +222,6 @@ app.get("/api/v1/brain/:shareLink",async(req,res)=>{
     const user = await UserModel.findOne({ 
         _id: link.userId
     })
-    //Error :-
-    // Property 'userId' does not exist on type 'Document<unknown, {}, { hash?: string | null | undefined; }> & { hash?: string | null | undefined; } & { _id: ObjectId; } & { __v: number; }'.ts(2339)
 
 
     if (!user) {
