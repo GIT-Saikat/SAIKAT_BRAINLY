@@ -2,7 +2,6 @@ import express from "express";
 
 
 import * as dotenv from 'dotenv';
-
 dotenv.config();
 
 
@@ -19,6 +18,11 @@ if (!JWT_PASSWORD) {
 import { UserMiddleware } from "./middleware";
 import { random } from "./utils";
 import cors from  "cors";
+import {z} from "zod";
+import bcrypt from "bcrypt";
+import { SchemaZod } from "./zodFile";
+
+
 
 
 
@@ -27,15 +31,29 @@ const  app=express();
 app.use(express.json());
 app.use(cors());
 
-app.post("/api/v1/signup",async (req,res)=>{
+app.post("/api/v1/signup",async (req:any, res:any)=>{
     //zod validation , hash the password , all try catch status code update from slides
+
+   
+
+    const result=SchemaZod.safeParse(req.body);
+
+    if (!result.success) {
+        return res.status(400).json({
+            message: "Incorrect data format",
+            error: result.error,
+        });
+    }
+
     const username=req.body.username;
     const password=req.body.password;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     try{
         await UserModel.create({
             username:username,
-            password:password
+            password:hashedPassword
         })
     
         res.json({
@@ -49,27 +67,55 @@ app.post("/api/v1/signup",async (req,res)=>{
 
 })
 
-app.post("/api/v1/signin",async(req,res)=>{
+app.post("/api/v1/signin",async(req:any, res:any)=>{
+
+    const result=SchemaZod.safeParse(req.body);
+
+    if (!result.success) {
+        return res.status(400).json({
+            message: "Incorrect data format",
+            error: result.error,
+        });
+    }
+
     const username=req.body.username;
     const password=req.body.password;
 
-    const existingUser=await UserModel.findOne({
-        username,
-        password
-    })
+   
+    try{
+        const existingUser=await UserModel.findOne({
+            username
 
-    if(existingUser){
-        const token=jwt.sign({
-            id:existingUser._id
-        },JWT_PASSWORD)
+        })
 
-        res.json({
-            token
-        })
-    }else{
-        res.status(411).json({
-            message:"Incorrect Credentials"
-        })
+        if (!existingUser || !existingUser.password ) {
+            return res.status(401).json({
+                message: "Incorrect Credentials",
+            });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+        
+
+
+        if(isPasswordValid){
+            const token=jwt.sign({
+                id:existingUser._id
+            },JWT_PASSWORD, { expiresIn: '1h' })
+
+            return res.json({
+                token
+            });
+        }else{
+            return res.status(411).json({
+                message:"Incorrect Credentials"
+            })
+        }
+    }catch (err){
+        console.error(err);
+        return res.status(500).json({
+            message: "Something went wrong",
+        });
     }
 })
 

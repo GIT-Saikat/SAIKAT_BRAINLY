@@ -1,3 +1,4 @@
+
 export  function random(len:number){
     let options="dfvhdkfvhdklvjclx16341631";
     let length=options.length;
