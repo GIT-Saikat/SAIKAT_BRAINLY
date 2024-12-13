@@ -18,7 +18,6 @@ if (!JWT_PASSWORD) {
 import { UserMiddleware } from "./middleware";
 import { random } from "./utils";
 import cors from  "cors";
-import {z} from "zod";
 import bcrypt from "bcrypt";
 import { SchemaZod } from "./zodFile";
 
@@ -136,20 +135,6 @@ app.post("/api/v1/content",UserMiddleware,async(req,res)=>{
     })
 
 })
-
-// app.get("/api/v1/content",UserMiddleware,async(req,res)=>{
-    
-//     const userId=req.userId;
-//     const content=await ContentModel.find({
-//         userId:userId
-//     }).populate("userId","username")
-
-//     res.json({
-//         content
-//     })
-
-// })
-
 app.get("/api/v1/content", UserMiddleware, async (req, res) => {
     
     const userId = req.userId;
