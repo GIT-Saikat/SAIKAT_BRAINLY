@@ -152,7 +152,7 @@ app.delete("/api/v1/content", UserMiddleware, async (req, res) => {
 
     await ContentModel.deleteMany({
         contentId,
-        userId: req.userId
+        userId: req.userId//user  can delete their own content not any others
     })
 
     res.json({
@@ -195,7 +195,7 @@ app.post("/api/v1/brain/share",UserMiddleware,async (req,res)=>{
 
 
 })
-
+//this is open endpoint. any user can get this info. so userMiddleware is not used.
 app.get("/api/v1/brain/:shareLink",async(req,res)=>{
     //after sharing link we can get that link
     const hash=req.params.shareLink;
