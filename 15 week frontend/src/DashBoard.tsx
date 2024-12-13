@@ -2,14 +2,14 @@
 import { useEffect, useState } from 'react'
 import "../App.css"
 
-import { Card } from '../componenets/Card'
-import { CreateContentModal } from '../componenets/CreateContent'
-import { PlusIcon } from '../icons/plus'
-import { ShareIcon } from '../icons/share'
-import { SideBar } from '../componenets/Sidebar'
-import { Button } from '../componenets/Button'
-import { useContent } from '../hooks/useContent'
-import { BACKEND_URL } from '../config'
+import { Card } from './componenets/Card'
+import { CreateContentModal } from './componenets/CreateContent'
+import { PlusIcon } from './icons/plus'
+import { ShareIcon } from './icons/share'
+import { SideBar } from './componenets/Sidebar'
+import { Button } from './componenets/Button'
+import { useContent } from './hooks/useContent'
+import { BACKEND_URL } from './config'
 import axios from 'axios'
 
 
